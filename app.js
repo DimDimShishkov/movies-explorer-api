@@ -8,18 +8,18 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const routes = require('./routes/index');
-// const errorsHandler = require('./middlewares/errorsHandler');
+const errorsHandler = require('./middlewares/errorsHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-// const headerHandler = require('./middlewares/headerHandler');
+const headerHandler = require('./middlewares/headerHandler');
 
-const { PORT = 3000 } = process.env; // ошибка запроса на сервер без указания порта
+const { PORT = 3000 } = process.env;
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // за 15 минут
   max: 100, // можно совершить максимум 100 запросов с одного IP
 });
 
 const app = express();
-// app.use(headerHandler); // удалить после успешного прохождения ревью
+app.use(headerHandler); // удалить после успешного прохождения ревью
 
 app.use(helmet());
 app.use(requestLogger); // подключаем логгер запросов
@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // подключаемся к серверу mongo
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect('mongodb://localhost:27017/movies-explorer', {
   useNewUrlParser: true,
 });
 
@@ -44,5 +44,5 @@ app.use(errorLogger); // подключаем логгер ошибок
 
 // обработчики ошибок
 app.use(errors()); // обработчик ошибок celebrate
-// app.use(errorsHandler);
-app.listen(PORT); // в аргументе было 80
+app.use(errorsHandler);
+app.listen(PORT);

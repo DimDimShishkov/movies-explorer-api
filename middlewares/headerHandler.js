@@ -1,15 +1,9 @@
 // Массив доменов, с которых разрешены кросс-доменные запросы
 const allowedCors = [
-  'https://praktikum.tk',
-  'http://praktikum.tk',
   'https://localhost:3000',
-  'https://mesto-shishkov.nomoredomains.icu',
-  'https://mesto-shishkov.nomoredomains.icu',
-  'http://mesto-shishkov.nomoredomains.icu',
   'http://localhost:3000',
 ];
 
-// eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
   const { origin } = req.headers; // Сохраняем источник запроса в переменную origin
   const { method } = req; // Сохраняем тип запроса (HTTP-метод) в соответствующую переменную
@@ -32,5 +26,5 @@ module.exports = (req, res, next) => {
     // завершаем обработку запроса и возвращаем результат клиенту
     return res.end();
   }
-  next();
+  return next();
 };
