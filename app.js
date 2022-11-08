@@ -19,7 +19,7 @@ const limiter = rateLimit({
 });
 
 const app = express();
-app.use(headerHandler); // удалить после успешного прохождения ревью
+app.use(headerHandler);
 
 app.use(helmet());
 app.use(requestLogger); // подключаем логгер запросов
