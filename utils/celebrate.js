@@ -31,6 +31,7 @@ const createMovieCelebrate = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
+    image: Joi.string().required().regex(linkPattern),
     trailerLink: Joi.string().required().regex(linkPattern),
     thumbnail: Joi.string().required().regex(linkPattern),
     movieId: Joi.number().required(),
