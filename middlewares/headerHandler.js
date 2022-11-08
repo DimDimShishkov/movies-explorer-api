@@ -2,10 +2,10 @@
 const allowedCors = [
   'https://localhost:3000',
   'http://localhost:3000',
-  'http://api.movies-explorer-ddsh.nomoredomains.icu',
-  'https://api.movies-explorer-ddsh.nomoredomains.icu',
-  'http://movies-explorer-ddsh.nomoredomains.icu',
-  'https://movies-explorer-ddsh.nomoredomains.icu',
+  'http://api.movies-explorer-ddsh.nomoredomains.icu/',
+  'https://api.movies-explorer-ddsh.nomoredomains.icu/',
+  'http://movies-explorer-ddsh.nomoredomains.icu/',
+  'https://movies-explorer-ddsh.nomoredomains.icu/',
 ];
 
 module.exports = (req, res, next) => {

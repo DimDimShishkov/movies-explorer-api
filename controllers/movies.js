@@ -5,7 +5,7 @@ const ValidationError = require('../errors/ValidationError');
 // возвращает все сохранённые фильмы через get /movies
 module.exports.getAllMovies = (req, res, next) => {
   Movie.find({})
-    .then((card) => res.send(card))
+    .then((movies) => res.send(movies))
     .catch(next);
 };
 // создаёт фильм через post /movies
@@ -45,10 +45,10 @@ module.exports.deleteMovie = (req, res, next) => {
     .then((user) => {
       if (user.owner.toString() === req.user._id) {
         Movie.findByIdAndRemove(req.params.movieId)
-          .then((item) => res.send(item))
+          .then((movie) => res.send(movie))
           .catch(next);
       } else {
-        next(new Forbidden('Карточка создана другим пользователем'));
+        next(new Forbidden('Фильм создан другим пользователем'));
       }
     })
     .catch(next);
