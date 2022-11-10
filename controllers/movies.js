@@ -2,6 +2,8 @@ const Movie = require('../models/movies');
 const NotFound = require('../errors/NotFound');
 const Forbidden = require('../errors/Forbidden');
 const ValidationError = require('../errors/ValidationError');
+const { FILM_NOT_FOUND_MESSAGE, OWNER_ERROR_MESSAGE } = require('../utils/constants');
+
 // возвращает все сохранённые фильмы через get /movies
 module.exports.getAllMovies = (req, res, next) => {
   Movie.find({})
@@ -40,7 +42,7 @@ module.exports.createMovie = (req, res, next) => {
 // удаляет сохранённый фильм через delete /:movieId
 module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId).orFail(new NotFound(
-    'Фильм не найден',
+    FILM_NOT_FOUND_MESSAGE,
   ))
     .then((user) => {
       if (user.owner.toString() === req.user._id) {
@@ -48,7 +50,7 @@ module.exports.deleteMovie = (req, res, next) => {
           .then((movie) => res.send(movie))
           .catch(next);
       } else {
-        next(new Forbidden('Фильм создан другим пользователем'));
+        next(new Forbidden(OWNER_ERROR_MESSAGE));
       }
     })
     .catch(next);

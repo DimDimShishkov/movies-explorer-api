@@ -12,7 +12,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const headerHandler = require('./middlewares/headerHandler');
 const { limiter } = require('./middlewares/limiter');
 
-const { PORT = 3000 } = process.env;
+const { DB_URL = 'mongodb://localhost:27017/moviesdb', PORT = 3000 } = process.env;
 
 const app = express();
 app.use(headerHandler);
@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // подключаемся к серверу mongo
-mongoose.connect('mongodb://localhost:27017/movies-explorer', {
+mongoose.connect(DB_URL, {
   useNewUrlParser: true,
 });
 

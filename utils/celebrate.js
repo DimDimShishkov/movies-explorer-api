@@ -1,6 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
-
-const linkPattern = /^(?:(?:https?|HTTPS?):\/\/)(www\.)?(\w|\W){1,}(\.[a-z]{2,6})((\w|\W){1,})?(#$)?/;
+const isURL = require('validator/lib/isURL');
+const { CREATE_MOVIE_ERROR_MESSAGE } = require('./constants');
 
 const signupCelebrate = celebrate({
   body: Joi.object().keys({
@@ -19,8 +19,8 @@ const signinCelebrate = celebrate({
 
 const patchUserCelebrate = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    email: Joi.string().email(),
+    name: Joi.string().required().min(2).max(30),
+    email: Joi.string().required().email(),
   }),
 });
 
@@ -31,9 +31,24 @@ const createMovieCelebrate = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().regex(linkPattern),
-    trailerLink: Joi.string().required().regex(linkPattern),
-    thumbnail: Joi.string().required().regex(linkPattern),
+    image: Joi.string().required().custom((value, helpers) => {
+      if (isURL(value)) {
+        return value;
+      }
+      return helpers.message(CREATE_MOVIE_ERROR_MESSAGE);
+    }),
+    trailerLink: Joi.string().required().custom((value, helpers) => {
+      if (isURL(value)) {
+        return value;
+      }
+      return helpers.message(CREATE_MOVIE_ERROR_MESSAGE);
+    }),
+    thumbnail: Joi.string().required().custom((value, helpers) => {
+      if (isURL(value)) {
+        return value;
+      }
+      return helpers.message(CREATE_MOVIE_ERROR_MESSAGE);
+    }),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
@@ -50,7 +65,6 @@ module.exports = {
   signupCelebrate,
   signinCelebrate,
   patchUserCelebrate,
-  linkPattern,
   createMovieCelebrate,
   movieIdCelebrate,
 };

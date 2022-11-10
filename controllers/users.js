@@ -4,6 +4,7 @@ const User = require('../models/users');
 const ValidationError = require('../errors/ValidationError');
 const NotFound = require('../errors/NotFound');
 const ConflictError = require('../errors/ConflictError');
+const { USER_NOT_FOUND_MESSAGE, CONFLICT_ERROR_MESSAGE } = require('../utils/constants');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -21,7 +22,7 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует'));
+        next(new ConflictError(CONFLICT_ERROR_MESSAGE));
       } else if (err.name === 'ValidationError') {
         next(new ValidationError(err.message));
       } else next(err);
@@ -57,7 +58,7 @@ module.exports.logout = (req, res) => {
 // возвращает информацию о пользователе через get /users/me
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id).orFail(new NotFound(
-    `Пользователь c ID = ${req.user._id} не найден`,
+    USER_NOT_FOUND_MESSAGE,
   ))
     .then((user) => res.send(user))
     .catch(next);
@@ -67,11 +68,13 @@ module.exports.updateUserInfo = (req, res, next) => {
   const { name, email } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
     .orFail(new NotFound(
-      'Пользователь не найден',
+      USER_NOT_FOUND_MESSAGE,
     ))
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.code === 11000) {
+        next(new ConflictError(CONFLICT_ERROR_MESSAGE));
+      } else if (err.name === 'ValidationError') {
         next(new ValidationError(err.message));
       } else next(err);
     })
