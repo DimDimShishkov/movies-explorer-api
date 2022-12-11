@@ -49,12 +49,11 @@ module.exports.login = (req, res, next) => {
     })
     .catch(next);
 };
-// авторизация через post /signout
+// выход из аккаунта через post /signout
 module.exports.logout = (req, res) => {
   res.clearCookie('jwt');
   return res.end();
 };
-
 // возвращает информацию о пользователе через get /users/me
 module.exports.getUserInfo = (req, res, next) => {
   User.findById(req.user._id).orFail(new NotFound(
