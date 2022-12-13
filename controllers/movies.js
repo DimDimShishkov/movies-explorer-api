@@ -6,7 +6,7 @@ const { FILM_NOT_FOUND_MESSAGE, OWNER_ERROR_MESSAGE } = require('../utils/consta
 
 // возвращает все сохранённые фильмы через get /movies
 module.exports.getAllMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id })
     .then((movies) => res.send(movies))
     .catch(next);
 };
